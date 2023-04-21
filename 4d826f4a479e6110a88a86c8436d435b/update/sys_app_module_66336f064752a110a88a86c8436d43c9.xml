@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <application display_value="Demo application">e2332bc24752a110a88a86c8436d43ff</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint/>
+        <homepage/>
+        <image/>
+        <link_type>LIST</link_type>
+        <map_page/>
+        <mobile_title>Open - Unassigned</mobile_title>
+        <mobile_view_name>Mobile</mobile_view_name>
+        <name>task</name>
+        <order>4</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query>active=true^assigned_toISEMPTY^EQ</query>
+        <report/>
+        <roles/>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-04-21 06:07:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>66336f064752a110a88a86c8436d43c9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Open - Unassigned</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Demo application" source="x_784252_demo_appl">4d826f4a479e6110a88a86c8436d435b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Demo application">4d826f4a479e6110a88a86c8436d435b</sys_scope>
+        <sys_update_name>sys_app_module_66336f064752a110a88a86c8436d43c9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-04-21 06:07:16</sys_updated_on>
+        <timeline_page/>
+        <title>Open - Unassigned</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+</record_update>
