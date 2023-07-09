@@ -34,12 +34,7 @@ router.post('/createuser', [
       password: secPass,
       email: req.body.email,
     });
-    const data = {
-      user: {
-        id: user.id
-      }
-    }
-    const authtoken = jwt.sign(data, JWT_SECRET);
+    const authtoken = jwt.sign({id:user.id}, JWT_SECRET);
 
 
     // res.json(user)
@@ -77,13 +72,7 @@ router.post('/login', [
       success = false
       return res.status(400).json({ success, error: "Please try to login with correct credentials" });
     }
-
-    const data = {
-      user: {
-        id: user.id
-      }
-    }
-    const authtoken = jwt.sign(data, JWT_SECRET);
+     const authtoken = jwt.sign({id:user.id}, JWT_SECRET);
     success = true;
     res.json({ success, authtoken })
 
