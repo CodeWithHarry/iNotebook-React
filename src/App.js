@@ -1,43 +1,44 @@
-import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
-import Navbar from './components/Navbar';
-import { Home } from './components/Home';
-import About from './components/About';
-import NoteState from './context/notes/NoteState';
-import { Alert } from './components/Alert';
-import Signup from './components/Signup';
-import Login from './components/Login';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from './components/Navbar'
+import Home from './components/Home'
+import About from './components/About'
+import NoteState from './context/NoteState'
+import Alert from '../src/components/Alert'
+import Login from './components/Login'
+import SignUp from './components/SignUp'
+import { useState } from 'react'
 
 function App() {
+
+  const [alert, setAlert] = useState(null)
+
+
+  const alertFunction = (message, type) => {
+    setAlert({
+      message: message,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null)
+    }, 1500);
+  }
+
   return (
-    <>
+    <Router>
       <NoteState>
-        <Router>
-          <Navbar />
-          <Alert message="This is amazing React course" />
-          <div className="container">
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/about">
-                <About />
-              </Route>
-              <Route exact path="/login">
-                <Login />
-              </Route>
-              <Route exact path="/signup">
-                <Signup />
-              </Route>
-            </Switch>
-          </div>
-        </Router>
+        <Navbar />
+        <Alert alert={alert} />
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<Home showAlert={alertFunction} />} />
+            <Route path="/about" element={<About showAlert={alertFunction} />} />
+            <Route path="/login" element={<Login showAlert={alertFunction} />} />
+            <Route path="/signUp" element={<SignUp showAlert={alertFunction} />} />
+
+          </Routes>
+        </div>
       </NoteState>
-    </>
+    </Router>
   );
 }
 

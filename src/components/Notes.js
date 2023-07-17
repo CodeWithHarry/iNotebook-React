@@ -1,82 +1,87 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import noteContext from "../context/notes/noteContext"
-import Noteitem from './Noteitem';
-import AddNote from './AddNote';
+import NoteContext from '../context/NoteContext'
+import Noteitem from '../components/Noteitem'
+import { useNavigate } from 'react-router-dom'
 
-const Notes = () => {
-    const context = useContext(noteContext);
-    const { notes, getNotes, editNote } = context;
+
+function Notes(props) {
+    const { showAlert } = props
+    const { notes, getNotes, editNote } = useContext(NoteContext)
+    const Navigate = useNavigate()
+
     useEffect(() => {
-        getNotes()
+        if (localStorage.getItem('x-api-key')) {
+            getNotes()
+        } else {
+            Navigate('/Login')
+        }
         // eslint-disable-next-line
     }, [])
+
+    const [value, setValue] = useState({ id: "", title: "", description: "", tag: "Default" })
+
+    const onChange = (e) => {
+        setValue({ ...value, [e.target.id]: e.target.value })
+        // console.log(value)
+    }
+
+    const handleClick = (e) => {
+        editNote(value, showAlert)
+        refClose.current.click()
+    }
+
     const ref = useRef(null)
     const refClose = useRef(null)
-    const [note, setNote] = useState({id: "", etitle: "", edescription: "", etag: ""})
 
-    const updateNote = (currentNote) => {
-        ref.current.click();
-        setNote({id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag:currentNote.tag})
+    const updateNote = (note) => {
+        ref.current.click()
+        setValue({ id: note._id, title: note.title, description: note.description, tag: note.tag })
+        // console.log(note)
     }
 
-    const handleClick = (e)=>{ 
-        editNote(note.id, note.etitle, note.edescription, note.etag)
-        refClose.current.click();
-    }
+    // console.log(notes, setNotes) 
+    return (<>
 
-    const onChange = (e)=>{
-        setNote({...note, [e.target.name]: e.target.value})
-    }
+        <button type="button" ref={ref} className="d-none btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Launch demo modal
+        </button>
 
-    return (
-        <>
-            <AddNote />
-            <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Launch demo modal
-            </button>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Edit Note</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <form className="my-3">
-                                <div className="mb-3">
-                                    <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" className="form-control" id="etitle" name="etitle" value={note.etitle} aria-describedby="emailHelp" onChange={onChange} minLength={5} required/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="description" className="form-label">Description</label>
-                                    <input type="text" className="form-control" id="edescription" name="edescription" value={note.edescription} onChange={onChange} minLength={5} required/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="tag" className="form-label">Tag</label>
-                                    <input type="text" className="form-control" id="etag" name="etag" value={note.etag} onChange={onChange} />
-                                </div>
- 
-                            </form>
-                        </div>
-                        <div className="modal-footer">
-                            <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button disabled={note.etitle.length<5 || note.edescription.length<5} onClick={handleClick} type="button" className="btn btn-primary">Update Note</button>
-                        </div>
+        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title mx-5" id="exampleModalLabel">Edit Note - {value.title}</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <label htmlFor="title" className='text-primary mx-2 mb-2'>Title</label>
+                        <input type="text" className='form-control' placeholder='Title' id="title" value={value.title} onChange={onChange} /><br />
+                        <label htmlFor="Description" className='text-primary mx-2 mb-2'>Description</label>
+                        <input type="text" className='form-control' placeholder='Description' id="description" value={value.description} onChange={onChange} /><br />
+                        <label htmlFor="Tag" className='text-primary mx-2 mb-2'>Tag</label>
+                        <input type="text" className='form-control' placeholder='Tag' id="tag" value={value.tag} onChange={onChange} />
+                    </div>
+                    <div className="modal-footer">
+                        <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Descard</button>
+                        <button type="button" disabled={value.title.length < 5 || value.description.length < 5} className="btn btn-success" onClick={handleClick} >Update Note</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div className="row my-3">
-                <h2>You Notes</h2>
-                <div className="container mx-2"> 
-                {notes.length===0 && 'No notes to display'}
-                </div>
-                {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} note={note} />
-                })}
+        <div className='container row my-3'>
+            <h2>Your Notes</h2>
+            <div className="container bg-danger mx-3">
+                {notes.length === 0 && "No notes to Display"}
             </div>
-        </>
+            {notes.map((note) => {
+                return <Noteitem key={note._id} updateNote={updateNote} note={note} showAlert={showAlert} />
+            })}
+        </div>
+    </>
     )
 }
+
+//! Noteitem has all properties of Notes.note "Forever"
 
 export default Notes

@@ -1,51 +1,35 @@
-import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import NoteContext from '../context/NoteContext'
 
 
-const Login = (props) => {
-    const [credentials, setCredentials] = useState({email: "", password: ""}) 
-    let history = useHistory();
+function Login(props) {
+    const {showAlert} = props
+    const { login } = useContext(NoteContext)
+    const [state, setState] = useState({ email: "", password: "" })
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await fetch("http://localhost:5000/api/auth/login", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({email: credentials.email, password: credentials.password})
-        });
-        const json = await response.json()
-        console.log(json);
-        if (json.success){
-            // Save the auth token and redirect
-            localStorage.setItem('token', json.authtoken); 
-            history.push("/");
-
-        }
-        else{
-            alert("Invalid credentials");
-        }
+    const onChange = (e) => {
+        setState({ ...state, [e.target.id]: e.target.value })
     }
 
-    const onChange = (e)=>{
-        setCredentials({...credentials, [e.target.name]: e.target.value})
+    const handleClick = (e) => {
+        e.preventDefault()
+        login(state, showAlert)
     }
 
     return (
         <div>
-            <form  onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email address</label>
-                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name="email" aria-describedby="emailHelp" />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+            <form onSubmit={handleClick}>
+                <h2 className='mt-5'>Please Login to continue Notebook</h2>
+                <div className="form-group">
+                    <label htmlFor="email">Email address</label>
+                    <input onChange={onChange} type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" />
+                    <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} name="password" id="password" />
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input onChange={onChange} type="password" className="form-control" id="password" placeholder="Password" />
                 </div>
-
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary my-3">Login</button>
             </form>
         </div>
     )
